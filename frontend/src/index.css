@@ -1,0 +1,64 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-green: #2D5016;
+  --primary-gold: #DAA520;
+  --secondary-green: #4a7c2c;
+  --light-bg: #f8f9fa;
+  --error-red: #dc2626;
+  --success-green: #059669;
+}
+
+body {
+  font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--light-bg);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Islamic Theme */
+.islamic-border {
+  border-top: 3px solid var(--primary-green);
+  border-bottom: 3px solid var(--primary-gold);
+}
+
+.islamic-pattern {
+  background-image: 
+    repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(45, 80, 22, 0.05) 10px, rgba(45, 80, 22, 0.05) 20px);
+}
+
+/* Smooth Transitions */
+.transition-smooth {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--light-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-green);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-green);
+}
