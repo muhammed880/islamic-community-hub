@@ -79,15 +79,11 @@ app.use('/api/users', userRoutes);
 // Masjid Routes
 app.use('/api/masjids', masjidRoutes);
 
-const nikahRegistrationRoutes = require('./routes/nikahRegistration');
-
-// ... in the routes section:
+// Masjid Registration Form Routes
+app.use('/api/masjid-registration', masjidRegistrationRoutes);
 
 // Nikah Registration Form Routes
 app.use('/api/nikah-registration', nikahRegistrationRoutes);
-
-// Masjid Registration Form Routes
-app.use('/api/masjid-registration', masjidRegistrationRoutes);
 
 // Job Routes
 app.use('/api/jobs', jobRoutes);
