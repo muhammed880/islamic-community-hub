@@ -1,137 +1,136 @@
-const mongoose = require('mongoose');
-const { MASJID_STATUS } = require('../config/constants');
+const express = require('express');
+const router = express.Router();
+const { verifyToken, isMasjidAuthority, isSuperAdmin } = require('../middleware/auth');
+const upload = require('../middleware/upload');
 
-const masjidSchema = new mongoose.Schema(
-  {
-    masjidName: {
-      type: String,
-      required: [true, 'Masjid name is required'],
-      trim: true,
-      unique: true
-    },
-    adminId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: [true, 'Admin ID is required']
-    },
-    phone: {
-      type: String,
-      required: [true, 'Phone number is required'],
-      match: [/^\+?[1-9]\d{1,14}$/, 'Invalid phone number']
-    },
-    email: {
-      type: String,
-      required: [true, 'Email is required'],
-      unique: true,
-      lowercase: true,
-      match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Invalid email format']
-    },
-    address: {
-      street: {
-        type: String,
-        required: true
-      },
-      city: {
-        type: String,
-        required: true
-      },
-      state: {
-        type: String,
-        required: true
-      },
-      zipCode: {
-        type: String,
-        required: true
-      },
-      latitude: {
-        type: Number,
-        required: true
-      },
-      longitude: {
-        type: Number,
-        required: true
-      }
-    },
-    upiId: {
-      type: String,
-      required: [true, 'UPI ID is required'],
-      match: [/^[a-zA-Z0-9._-]+@[a-zA-Z]+$/, 'Invalid UPI ID format']
-    },
-    bankAccountNumber: String,
-    bankIFSC: String,
-    bankName: String,
-    registrationCertificate: {
-      type: String,
-      required: [true, 'Registration certificate is required']
-    },
-    trustDeed: {
-      type: String,
-      required: [true, 'Trust deed is required']
-    },
-    status: {
-      type: String,
-      enum: Object.values(MASJID_STATUS),
-      default: MASJID_STATUS.PENDING
-    },
-    registrationFeeAmount: {
-      type: Number,
-      default: 5000
-    },
-    registrationFeeStatus: {
-      type: String,
-      enum: ['pending', 'paid', 'failed'],
-      default: 'pending'
-    },
-    registrationFeeDate: Date,
-    renewalDueDate: Date,
-    renewalFeeAmount: {
-      type: Number,
-      default: 2000
-    },
-    establishmentYear: Number,
-    totalMembers: {
-      type: Number,
-      default: 0
-    },
-    totalDonations: {
-      type: Number,
-      default: 0
-    },
-    averageRating: {
-      type: Number,
-      default: 0,
-      min: 0,
-      max: 5
-    },
-    description: String,
-    openingHours: {
-      monday: String,
-      tuesday: String,
-      wednesday: String,
-      thursday: String,
-      friday: String,
-      saturday: String,
-      sunday: String
-    },
-    facilities: [String],
-    prayerTimes: {
-      fajr: String,
-      dhuhr: String,
-      asr: String,
-      maghrib: String,
-      isha: String
+/**
+ * MASJID MANAGEMENT ROUTES
+ * Routes for viewing and managing approved masjids
+ */
+
+// ==================== PUBLIC ROUTES ====================
+
+/**
+ * GET /api/masjids
+ * List all approved masjids
+ * Access: Public
+ * Query: { page, limit, city, state, search, sort }
+ */
+router.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Get all approved masjids',
+    endpoint: 'GET /api/masjids',
+    implementation: 'Pending - Use controller'
+  });
+});
+
+/**
+ * GET /api/masjids/:masjidId
+ * Get specific masjid details
+ * Access: Public
+ */
+router.get('/:masjidId', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Get masjid details',
+    endpoint: `GET /api/masjids/${req.params.masjidId}`,
+    implementation: 'Pending - Use controller'
+  });
+});
+
+// ==================== MASJID AUTHORITY ROUTES ====================
+
+/**
+ * PUT /api/masjids/:masjidId
+ * Update masjid information
+ * Access: Protected (Masjid Authority)
+ */
+router.put('/:masjidId', verifyToken, isMasjidAuthority, (req, res) => {
+  res.json({
+    success: true,
+    message: 'Update masjid information',
+    endpoint: `PUT /api/masjids/${req.params.masjidId}`,
+    implementation: 'Pending - Use controller'
+  });
+});
+
+/**
+ * POST /api/masjids/:masjidId/upload-picture
+ * Upload masjid picture
+ * Access: Protected (Masjid Authority)
+ */
+router.post('/:masjidId/upload-picture', verifyToken, isMasjidAuthority, upload.single('picture'), (req, res) => {
+  res.json({
+    success: true,
+    message: 'Masjid picture uploaded',
+    endpoint: `POST /api/masjids/${req.params.masjidId}/upload-picture`,
+    implementation: 'Pending - Use controller'
+  });
+});
+
+/**
+ * GET /api/masjids/:masjidId/dashboard
+ * Get masjid dashboard data
+ * Access: Protected (Masjid Authority)
+ */
+router.get('/:masjidId/dashboard', verifyToken, isMasjidAuthority, (req, res) => {
+  res.json({
+    success: true,
+    message: 'Get masjid dashboard',
+    endpoint: `GET /api/masjids/${req.params.masjidId}/dashboard`,
+    implementation: 'Pending - Use controller',
+    data: {
+      totalDonations: 0,
+      totalMembers: 0,
+      pendingVerifications: 0,
+      recentDonations: []
     }
-  },
-  {
-    timestamps: true
-  }
-);
+  });
+});
 
-// Indexes
-masjidSchema.index({ adminId: 1 });
-masjidSchema.index({ status: 1 });
-masjidSchema.index({ 'address.city': 1 });
-masjidSchema.index({ email: 1 });
-masjidSchema.index({ upiId: 1 });
+/**
+ * POST /api/masjids/:masjidId/renewal
+ * Submit renewal request
+ * Access: Protected (Masjid Authority)
+ */
+router.post('/:masjidId/renewal', verifyToken, isMasjidAuthority, (req, res) => {
+  res.json({
+    success: true,
+    message: 'Renewal request submitted',
+    endpoint: `POST /api/masjids/${req.params.masjidId}/renewal`,
+    implementation: 'Pending - Use controller'
+  });
+});
 
-module.exports = mongoose.model('Masjid', masjidSchema);
+// ==================== SUPER ADMIN ROUTES ====================
+
+/**
+ * GET /api/masjids/:masjidId/requests
+ * Get all pending requests for a masjid (jobs, donations, etc.)
+ * Access: Protected (Super Admin)
+ */
+router.get('/:masjidId/requests', verifyToken, isSuperAdmin, (req, res) => {
+  res.json({
+    success: true,
+    message: 'Get masjid requests',
+    endpoint: `GET /api/masjids/${req.params.masjidId}/requests`,
+    implementation: 'Pending - Use controller'
+  });
+});
+
+/**
+ * DELETE /api/masjids/:masjidId
+ * Suspend/Delete masjid (Super Admin only)
+ * Access: Protected (Super Admin)
+ */
+router.delete('/:masjidId', verifyToken, isSuperAdmin, (req, res) => {
+  res.json({
+    success: true,
+    message: 'Masjid suspended',
+    endpoint: `DELETE /api/masjids/${req.params.masjidId}`,
+    implementation: 'Pending - Use controller'
+  });
+});
+
+module.exports = router;
