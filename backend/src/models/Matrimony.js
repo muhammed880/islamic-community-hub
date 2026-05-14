@@ -1,111 +1,76 @@
-const mongoose = require('mongoose');
-const { MATRIMONY_STATUS } = require('../config/constants');
+const express = require('express');
+const router = express.Router();
+const { verifyToken } = require('../middleware/auth');
+const upload = require('../middleware/upload');
+const {
+  browseProfiles,
+  getProfileDetails,
+  createProfile,
+  expressInterest,
+  getReceivedInterests,
+  respondToInterest
+} = require('../controllers/matrimonyController');
 
-const matrimonySchema = new mongoose.Schema(
-  {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: [true, 'User ID is required'],
-      unique: true
-    },
-    fullName: {
-      type: String,
-      required: [true, 'Full name is required'],
-      trim: true
-    },
-    dateOfBirth: {
-      type: Date,
-      required: [true, 'Date of birth is required']
-    },
-    age: {
-      type: Number,
-      computed: true
-    },
-    gender: {
-      type: String,
-      enum: ['male', 'female'],
-      required: [true, 'Gender is required']
-    },
-    height: String,
-    complexion: String,
-    education: {
-      type: String,
-      required: [true, 'Education is required']
-    },
-    occupation: {
-      type: String,
-      required: [true, 'Occupation is required']
-    },
-    income: Number,
-    incomeCurrency: {
-      type: String,
-      default: 'INR'
-    },
-    fatherName: String,
-    motherName: String,
-    familyStatus: String,
-    hobbies: [String],
-    languages: [String],
-    lookingFor: {
-      type: String,
-      required: [true, 'Looking for is required']
-    },
-    profilePhoto: {
-      type: String,
-      required: [true, 'Profile photo is required']
-    },
-    status: {
-      type: String,
-      enum: Object.values(MATRIMONY_STATUS),
-      default: MATRIMONY_STATUS.PENDING_VERIFICATION
-    },
-    isPublic: {
-      type: Boolean,
-      default: false
-    },
-    verifiedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      default: null
-    },
-    verifiedDate: {
-      type: Date,
-      default: null
-    },
-    bio: String,
-    views: {
-      type: Number,
-      default: 0
-    },
-    interests: {
-      type: Number,
-      default: 0
-    }
-  },
-  {
-    timestamps: true
-  }
-);
+/**
+ * MATRIMONY ROUTES
+ * Matrimonial profiles and matchmaking
+ */
 
-// Calculate age before save
-matrimonySchema.pre('save', function (next) {
-  const today = new Date();
-  const birthDate = new Date(this.dateOfBirth);
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const monthDiff = today.getMonth() - birthDate.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-  this.age = age;
-  next();
-});
+// ==================== PUBLIC ROUTES ====================
 
-// Indexes
-matrimonySchema.index({ userId: 1 });
-matrimonySchema.index({ gender: 1 });
-matrimonySchema.index({ status: 1 });
-matrimonySchema.index({ isPublic: 1 });
-matrimonySchema.index({ age: 1 });
+/**
+ * GET /api/matrimony
+ * Browse matrimony profiles
+ * Access: Public
+ * Query: { page, limit, gender, ageMin, ageMax, education, city }
+ * Response: { profiles[], pagination }
+ */
+router.get('/', browseProfiles);
 
-module.exports = mongoose.model('Matrimony', matrimonySchema);
+/**
+ * GET /api/matrimony/:profileId
+ * Get matrimony profile details
+ * Access: Public
+ * Response: Full profile object
+ */
+router.get('/:profileId', getProfileDetails);
+
+// ==================== PROTECTED ROUTES ====================
+
+/**
+ * POST /api/matrimony
+ * Create matrimony profile
+ * Access: Protected (Authenticated Users)
+ * Files: profilePhoto (JPG/PNG max 5MB)
+ * Body: { fullName, dateOfBirth, gender, height, education, occupation, income, hobbies, languages, lookingFor, bio }
+ * Response: { profileId, status }
+ */
+router.post('/', verifyToken, upload.single('profilePhoto'), createProfile);
+
+/**
+ * POST /api/matrimony/:profileId/interest
+ * Express interest in profile
+ * Access: Protected (Authenticated Users)
+ * Body: { message }
+ * Response: { status }
+ */
+router.post('/:profileId/interest', verifyToken, expressInterest);
+
+/**
+ * GET /api/matrimony/interests/received
+ * Get interests received
+ * Access: Protected (Authenticated Users)
+ * Response: { interests[] }
+ */
+router.get('/interests/received', verifyToken, getReceivedInterests);
+
+/**
+ * PUT /api/matrimony/interests/:interestId
+ * Accept/Reject interest
+ * Access: Protected (Authenticated Users)
+ * Body: { status: 'accepted' | 'rejected' }
+ * Response: { status }
+ */
+router.put('/interests/:interestId', verifyToken, respondToInterest);
+
+module.exports = router;
