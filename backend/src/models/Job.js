@@ -1,88 +1,68 @@
-const mongoose = require('mongoose');
-const { JOB_STATUS } = require('../config/constants');
+const express = require('express');
+const router = express.Router();
+const { verifyToken, isMasjidAuthority } = require('../middleware/auth');
+const upload = require('../middleware/upload');
+const {
+  listJobs,
+  getJobDetails,
+  createJob,
+  applyForJob,
+  getJobApplications
+} = require('../controllers/jobController');
 
-const jobSchema = new mongoose.Schema(
-  {
-    jobTitle: {
-      type: String,
-      required: [true, 'Job title is required'],
-      trim: true
-    },
-    jobDescription: {
-      type: String,
-      required: [true, 'Job description is required']
-    },
-    masjidId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Masjid',
-      required: [true, 'Masjid ID is required']
-    },
-    createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: [true, 'Creator ID is required']
-    },
-    jobType: {
-      type: String,
-      enum: ['full_time', 'part_time', 'volunteer'],
-      required: [true, 'Job type is required']
-    },
-    salaryRange: {
-      minSalary: {
-        type: Number,
-        required: true,
-        min: 0
-      },
-      maxSalary: {
-        type: Number,
-        required: true,
-        min: 0
-      },
-      currency: {
-        type: String,
-        default: 'INR'
-      }
-    },
-    location: {
-      city: {
-        type: String,
-        required: true
-      },
-      state: {
-        type: String,
-        required: true
-      }
-    },
-    qualifications: [String],
-    experience: {
-      type: Number,
-      default: 0
-    },
-    skills: [String],
-    closingDate: {
-      type: Date,
-      required: [true, 'Closing date is required']
-    },
-    status: {
-      type: String,
-      enum: Object.values(JOB_STATUS),
-      default: JOB_STATUS.ACTIVE
-    },
-    applicantCount: {
-      type: Number,
-      default: 0
-    }
-  },
-  {
-    timestamps: true
-  }
-);
+/**
+ * JOBS MANAGEMENT ROUTES
+ * Job postings and applications
+ */
 
-// Indexes
-jobSchema.index({ masjidId: 1 });
-jobSchema.index({ createdBy: 1 });
-jobSchema.index({ status: 1 });
-jobSchema.index({ closingDate: 1 });
-jobSchema.index({ 'location.city': 1 });
+// ==================== PUBLIC ROUTES ====================
 
-module.exports = mongoose.model('Job', jobSchema);
+/**
+ * GET /api/jobs
+ * List all job postings
+ * Access: Public
+ * Query: { page, limit, city, state, jobType, search }
+ * Response: { jobs[], pagination }
+ */
+router.get('/', listJobs);
+
+/**
+ * GET /api/jobs/:jobId
+ * Get job details
+ * Access: Public
+ * Response: Job object with masjid and creator info
+ */
+router.get('/:jobId', getJobDetails);
+
+// ==================== PROTECTED ROUTES ====================
+
+/**
+ * POST /api/jobs/:jobId/apply
+ * Apply for job
+ * Access: Protected (Authenticated Users)
+ * Files: resume (PDF/DOC max 5MB)
+ * Body: { coverLetter }
+ * Response: { applicationId, status }
+ */
+router.post('/:jobId/apply', verifyToken, upload.single('resume'), applyForJob);
+
+// ==================== MASJID AUTHORITY ROUTES ====================
+
+/**
+ * POST /api/jobs
+ * Create new job posting
+ * Access: Protected (Masjid Authority)
+ * Body: { jobTitle, jobDescription, jobType, salaryRange, location, qualifications, experience, skills, closingDate }
+ * Response: Created job object
+ */
+router.post('/', verifyToken, isMasjidAuthority, createJob);
+
+/**
+ * GET /api/jobs/:jobId/applications
+ * Get job applications
+ * Access: Protected (Masjid Authority)
+ * Response: { applications[] }
+ */
+router.get('/:jobId/applications', verifyToken, isMasjidAuthority, getJobApplications);
+
+module.exports = router;
