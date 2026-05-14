@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const masjidRoutes = require('./routes/masjids');
 const masjidRegistrationRoutes = require('./routes/masjidRegistration');
+const nikahRegistrationRoutes = require('./routes/nikahRegistration');
 const jobRoutes = require('./routes/jobs');
 const donationRoutes = require('./routes/donations');
 const matrimonyRoutes = require('./routes/matrimony');
@@ -77,6 +78,13 @@ app.use('/api/users', userRoutes);
 
 // Masjid Routes
 app.use('/api/masjids', masjidRoutes);
+
+const nikahRegistrationRoutes = require('./routes/nikahRegistration');
+
+// ... in the routes section:
+
+// Nikah Registration Form Routes
+app.use('/api/nikah-registration', nikahRegistrationRoutes);
 
 // Masjid Registration Form Routes
 app.use('/api/masjid-registration', masjidRegistrationRoutes);
