@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { verifyToken } = require('../middleware/auth');
+const upload = require('../middleware/upload');
+const { getProfile, updateProfile, uploadProfilePicture } = require('../controllers/userController');
 
 /**
  * USER PROFILE ROUTES
@@ -12,43 +14,27 @@ const { verifyToken } = require('../middleware/auth');
 /**
  * GET /api/users/profile
  * Get current user profile
- * Access: Protected
+ * Access: Protected (Authenticated Users)
+ * Response: User profile object
  */
-router.get('/profile', verifyToken, (req, res) => {
-  res.json({
-    success: true,
-    message: 'Get user profile endpoint',
-    endpoint: 'GET /api/users/profile',
-    implementation: 'Pending - Create userController.js'
-  });
-});
+router.get('/profile', verifyToken, getProfile);
 
 /**
  * PUT /api/users/profile
  * Update user profile
- * Access: Protected
+ * Access: Protected (Authenticated Users)
+ * Body: { firstName, lastName, phone, dateOfBirth, address }
+ * Response: Updated user object
  */
-router.put('/profile', verifyToken, (req, res) => {
-  res.json({
-    success: true,
-    message: 'Update user profile endpoint',
-    endpoint: 'PUT /api/users/profile',
-    implementation: 'Pending - Create userController.js'
-  });
-});
+router.put('/profile', verifyToken, updateProfile);
 
 /**
  * POST /api/users/profile/picture
  * Upload profile picture
- * Access: Protected
+ * Access: Protected (Authenticated Users)
+ * Files: profilePicture (JPG, PNG, WebP max 5MB)
+ * Response: { profilePicture: url }
  */
-router.post('/profile/picture', verifyToken, (req, res) => {
-  res.json({
-    success: true,
-    message: 'Upload profile picture endpoint',
-    endpoint: 'POST /api/users/profile/picture',
-    implementation: 'Pending - Create userController.js'
-  });
-});
+router.post('/profile/picture', verifyToken, upload.single('profilePicture'), uploadProfilePicture);
 
 module.exports = router;
