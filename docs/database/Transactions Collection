@@ -1,0 +1,35 @@
+{
+  _id: ObjectId,
+  transactionId: String (unique),
+  
+  // Participants
+  fromUserId: ObjectId (ref: users), // payer
+  toUserId: ObjectId (ref: users), // receiver (masjid)
+  masjid: ObjectId (ref: masjids),
+  
+  // Transaction Details
+  type: Enum['registration', 'renewal', 'donation', 'refund'],
+  amount: Number,
+  currency: String,
+  
+  // Payment Gateway
+  paymentGateway: Enum['razorpay', 'bank_transfer', 'cash'],
+  paymentId: String,
+  
+  // Reference
+  referenceId: ObjectId, // ref to donation, needy_person, masjid, etc.
+  description: String,
+  
+  // Status
+  status: Enum['pending', 'completed', 'failed', 'refunded'],
+  
+  // Fee Information
+  platformFeePercentage: Number,
+  platformFeeAmount: Number,
+  
+  // Timestamps
+  initiatedAt: Date,
+  completedAt: Date,
+  createdAt: Date,
+  updatedAt: Date
+}
