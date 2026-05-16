@@ -1,0 +1,16 @@
+{
+  "_id": ObjectId,
+  "transactionType": "registration_fee", // "registration_fee", "renewal_fee", "donation", "zakat"
+  "amount": 5000,
+  "currency": "INR",
+  "fromUserId": ObjectId, // Reference to Users (who paid)
+  "toUserId": ObjectId, // Reference to Users (who received - Super Admin for fees)
+  "masjidId": ObjectId, // Reference to Masjids (if applicable)
+  "razorpayOrderId": "order_xxx",
+  "razorpayPaymentId": "pay_xxx",
+  "transactionStatus": "completed", // "pending", "completed", "failed"
+  "description": "Registration fee for Al-Noor Masjid",
+  "receiptUrl": "url_to_receipt",
+  "transactionDate": ISODate("2026-05-12"),
+  "createdAt": ISODate("2026-05-12")
+}
