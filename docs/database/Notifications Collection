@@ -1,0 +1,28 @@
+{
+  _id: ObjectId,
+  notificationId: String (unique),
+  
+  // Recipient
+  userId: ObjectId (ref: users),
+  
+  // Notification Details
+  type: Enum['info', 'warning', 'error', 'success'],
+  title: String,
+  message: String,
+  
+  // Reference
+  relatedTo: String, // 'donation', 'job', 'class', 'approval', etc.
+  referenceId: ObjectId,
+  
+  // Action
+  actionUrl: String,
+  actionText: String,
+  
+  // Status
+  isRead: Boolean,
+  readAt: Date,
+  
+  // Timestamps
+  createdAt: Date,
+  updatedAt: Date
+}
