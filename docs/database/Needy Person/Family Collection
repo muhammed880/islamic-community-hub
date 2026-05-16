@@ -1,0 +1,65 @@
+{
+  _id: ObjectId,
+  profileId: String (unique),
+  masjid: ObjectId (ref: masjids),
+  
+  // Personal Details
+  name: String,
+  phone: String,
+  email: String,
+  gender: Enum['male', 'female'],
+  dateOfBirth: Date,
+  
+  // Family Details
+  familySize: Number,
+  familyMembers: [
+    {
+      name: String,
+      age: Number,
+      relation: String
+    }
+  ],
+  
+  // Address
+  address: {
+    street: String,
+    city: String,
+    state: String,
+    zipCode: String,
+    country: String
+  },
+  
+  // Financial Information
+  monthlyIncome: Number,
+  monthlyExpense: Number,
+  incomeSource: String,
+  employmentStatus: Enum['employed', 'unemployed', 'retired'],
+  
+  // Need Details
+  reason: String, // Medical, Education, Natural Disaster, etc.
+  description: String,
+  estimatedAmount: Number,
+  documents: [String], // URLs
+  
+  // Verification
+  status: Enum['pending', 'approved', 'rejected', 'verified'],
+  verifiedBy: ObjectId (ref: users - super_admin),
+  verificationDate: Date,
+  rejectionReason: String,
+  
+  // Zakat Distribution
+  zakatAllocated: Number,
+  zakatDistributed: Number,
+  distributions: [
+    {
+      donorId: ObjectId (ref: users),
+      amount: Number,
+      date: Date,
+      transactionId: ObjectId (ref: transactions)
+    }
+  ],
+  
+  // Timestamps
+  createdAt: Date,
+  updatedAt: Date
+}
