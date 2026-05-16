@@ -1,0 +1,25 @@
+{
+  "_id": ObjectId,
+  "jobTitle": "Imam",
+  "jobDescription": "Experienced Imam needed for daily prayers",
+  "masjidId": ObjectId, // Reference to Masjids
+  "createdBy": ObjectId, // Reference to Users
+  "jobType": "full_time", // "full_time", "part_time", "volunteer"
+  "salaryRange": {
+    "minSalary": 30000,
+    "maxSalary": 50000,
+    "currency": "INR"
+  },
+  "location": {
+    "city": "Bangalore",
+    "state": "Karnataka"
+  },
+  "qualifications": ["Islamic Knowledge", "Quran Recitation"],
+  "experience": 5,
+  "skills": ["Leadership", "Communication"],
+  "closingDate": ISODate("2026-06-12"),
+  "status": "active", // "active", "closed", "filled"
+  "applicantCount": 12,
+  "createdAt": ISODate("2026-05-12"),
+  "updatedAt": ISODate("2026-05-12")
+}
