@@ -1,0 +1,53 @@
+{
+  _id: ObjectId,
+  masjidName: String (required),
+  registrationNumber: String (unique),
+  authority: ObjectId (ref: users - masjid_authority),
+  
+  // Contact Information
+  email: String,
+  phone: String,
+  alternatePhone: String,
+  
+  // Location
+  address: {
+    street: String,
+    city: String,
+    state: String,
+    zipCode: String,
+    country: String,
+    latitude: Number,
+    longitude: Number
+  },
+  
+  // Financial Information
+  upiId: String (for receiving donations),
+  bankAccountNumber: String,
+  bankIFSC: String,
+  bankName: String,
+  
+  // Registration Details
+  registrationFee: Number,
+  renewalFee: Number,
+  registrationDate: Date,
+  renewalDate: Date,
+  
+  // Documents
+  registrationCertificate: String (URL),
+  trustDeed: String (URL),
+  gstCertificate: String (URL),
+  
+  // Status
+  status: Enum['pending', 'approved', 'rejected', 'suspended'],
+  approvedBy: ObjectId (ref: users - super_admin),
+  rejectionReason: String,
+  
+  // Statistics
+  totalMembers: Number,
+  totalDonations: Number,
+  totalJobsPosted: Number,
+  
+  // Timestamps
+  createdAt: Date,
+  updatedAt: Date
+}
