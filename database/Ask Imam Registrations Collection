@@ -1,0 +1,8 @@
+{
+  "_id": ObjectId,
+  "sessionId": ObjectId, // Reference to Ask Imam Sessions
+  "userId": ObjectId, // Reference to Users
+  "registrationDate": ISODate("2026-05-15"),
+  "attendanceStatus": "attended", // "registered", "attended", "missed"
+  "questionsAsked": 2
+}
