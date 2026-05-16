@@ -1,0 +1,14 @@
+{
+  "_id": ObjectId,
+  "adminId": ObjectId, // Reference to Users (Super Admin)
+  "action": "approved_masjid", // "approved_masjid", "rejected_masjid", "approved_nikah", etc.
+  "resourceType": "Masjid", // "Masjid", "NikahNama", "NeedyPerson", etc.
+  "resourceId": ObjectId,
+  "changes": {
+    "status": ["pending", "approved"]
+  },
+  "reason": "All documents verified",
+  "ipAddress": "192.168.1.1",
+  "userAgent": "Mozilla/5.0...",
+  "createdAt": ISODate("2026-05-12")
+}
