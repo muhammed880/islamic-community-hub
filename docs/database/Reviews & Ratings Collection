@@ -1,0 +1,24 @@
+{
+  _id: ObjectId,
+  reviewId: String (unique),
+  
+  // Reviewer
+  reviewerId: ObjectId (ref: users),
+  
+  // Subject
+  reviewType: Enum['masjid', 'matrimony_profile', 'job_experience'],
+  subjectId: ObjectId, // ref to masjid, matrimony, job, etc.
+  
+  // Review Details
+  rating: Number, // 1-5
+  title: String,
+  comment: String,
+  
+  // Status
+  status: Enum['pending', 'approved', 'rejected'],
+  approvedBy: ObjectId (ref: users - super_admin),
+  
+  // Timestamps
+  createdAt: Date,
+  updatedAt: Date
+}
