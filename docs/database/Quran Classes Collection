@@ -1,0 +1,61 @@
+{
+  _id: ObjectId,
+  classId: String (unique),
+  masjid: ObjectId (ref: masjids),
+  imam: ObjectId (ref: users - masjid_authority),
+  
+  // Class Details
+  className: String,
+  description: String,
+  level: Enum['beginner', 'intermediate', 'advanced'],
+  
+  // Schedule
+  startDate: Date,
+  endDate: Date,
+  classTime: String, // HH:MM format
+  dayOfWeek: [String], // Monday, Tuesday, etc.
+  
+  // Duration & Capacity
+  durationMinutes: Number,
+  maxParticipants: Number,
+  
+  // Agora SDK Details
+  channelName: String,
+  channelToken: String,
+  
+  // Curriculum
+  curriculum: [
+    {
+      week: Number,
+      topic: String,
+      surahRange: String
+    }
+  ],
+  
+  // Participants
+  participants: [
+    {
+      userId: ObjectId (ref: users),
+      enrolledDate: Date,
+      status: Enum['active', 'completed', 'dropped']
+    }
+  ],
+  
+  // Sessions
+  sessions: [
+    {
+      sessionDate: Date,
+      sessionStartTime: Date,
+      sessionEndTime: Date,
+      recordingUrl: String,
+      attendance: [ObjectId]
+    }
+  ],
+  
+  // Status
+  status: Enum['upcoming', 'ongoing', 'completed', 'cancelled'],
+  
+  // Timestamps
+  createdAt: Date,
+  updatedAt: Date
+}
