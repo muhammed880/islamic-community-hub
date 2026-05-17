@@ -1,6 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const { verifyToken } = require('../middleware/auth');
+const upload = require('../middleware/upload');
+const {
+  browseProfiles,
+  getProfileDetails,
+  createProfile,
+  expressInterest,
+  getReceivedInterests,
+  respondToInterest
+} = require('../controllers/matrimonyController');
 
 /**
  * MATRIMONY ROUTES
@@ -12,88 +21,56 @@ const { verifyToken } = require('../middleware/auth');
 /**
  * GET /api/matrimony
  * Browse matrimony profiles
- * Access: Public (but better with auth)
+ * Access: Public
  * Query: { page, limit, gender, ageMin, ageMax, education, city }
+ * Response: { profiles[], pagination }
  */
-router.get('/', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Browse matrimony profiles endpoint',
-    endpoint: 'GET /api/matrimony',
-    implementation: 'Pending - Create matrimonyController.js'
-  });
-});
+router.get('/', browseProfiles);
 
 /**
  * GET /api/matrimony/:profileId
  * Get matrimony profile details
- * Access: Public/Protected
+ * Access: Public
+ * Response: Full profile object
  */
-router.get('/:profileId', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Get matrimony profile endpoint',
-    endpoint: `GET /api/matrimony/${req.params.profileId}`,
-    implementation: 'Pending - Create matrimonyController.js'
-  });
-});
+router.get('/:profileId', getProfileDetails);
 
 // ==================== PROTECTED ROUTES ====================
 
 /**
  * POST /api/matrimony
  * Create matrimony profile
- * Access: Protected
+ * Access: Protected (Authenticated Users)
+ * Files: profilePhoto (JPG/PNG max 5MB)
+ * Body: { fullName, dateOfBirth, gender, height, education, occupation, income, hobbies, languages, lookingFor, bio }
+ * Response: { profileId, status }
  */
-router.post('/', verifyToken, (req, res) => {
-  res.json({
-    success: true,
-    message: 'Create matrimony profile endpoint',
-    endpoint: 'POST /api/matrimony',
-    implementation: 'Pending - Create matrimonyController.js'
-  });
-});
+router.post('/', verifyToken, upload.single('profilePhoto'), createProfile);
 
 /**
  * POST /api/matrimony/:profileId/interest
  * Express interest in profile
- * Access: Protected
+ * Access: Protected (Authenticated Users)
+ * Body: { message }
+ * Response: { status }
  */
-router.post('/:profileId/interest', verifyToken, (req, res) => {
-  res.json({
-    success: true,
-    message: 'Express interest endpoint',
-    endpoint: `POST /api/matrimony/${req.params.profileId}/interest`,
-    implementation: 'Pending - Create matrimonyController.js'
-  });
-});
+router.post('/:profileId/interest', verifyToken, expressInterest);
 
 /**
  * GET /api/matrimony/interests/received
  * Get interests received
- * Access: Protected
+ * Access: Protected (Authenticated Users)
+ * Response: { interests[] }
  */
-router.get('/interests/received', verifyToken, (req, res) => {
-  res.json({
-    success: true,
-    message: 'Get received interests endpoint',
-    endpoint: 'GET /api/matrimony/interests/received',
-    implementation: 'Pending - Create matrimonyController.js'
-  });
-});
+router.get('/interests/received', verifyToken, getReceivedInterests);
 
 /**
  * PUT /api/matrimony/interests/:interestId
  * Accept/Reject interest
- * Access: Protected
+ * Access: Protected (Authenticated Users)
+ * Body: { status: 'accepted' | 'rejected' }
+ * Response: { status }
  */
-router.put('/interests/:interestId', verifyToken, (req, res) => {
-  res.json({
-    success: true,
-    message: 'Accept/Reject interest endpoint',
-    endpoint: `PUT /api/matrimony/interests/${req.params.interestId}`,
-    implementation: 'Pending - Create matrimonyController.js'
-  });
-});
+router.put('/interests/:interestId', verifyToken, respondToInterest);
 
 module.exports = router;
