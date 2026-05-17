@@ -30,3 +30,37 @@ Tracks all donations to Masjids and Zakat to needy
 - `transactionStatus`
 - `upiTransactionId` (unique within transaction date)
 - `donationDate`
+
+---
+
+### 15. Transactions Collection
+Records all financial transactions (fees, payments)
+
+```json
+{
+  "_id": ObjectId,
+  "transactionType": "registration_fee", // "registration_fee", "renewal_fee", "donation", "zakat"
+  "amount": 5000,
+  "currency": "INR",
+  "fromUserId": ObjectId, // Reference to Users (who paid)
+  "toUserId": ObjectId, // Reference to Users (who received - Super Admin for fees)
+  "masjidId": ObjectId, // Reference to Masjids (if applicable)
+  "upiTransactionId": "UPI12345678901234567890",
+  "recipientUpiId": "superadmin@upi", // UPI ID of recipient
+  "paymentProofScreenshot": "url_to_screenshot",
+  "transactionStatus": "completed", // "pending_verification", "completed", "rejected"
+  "description": "Registration fee for Al-Noor Masjid",
+  "receiptNumber": "RECEIPT-2026-00001",
+  "receiptUrl": "url_to_receipt",
+  "transactionDate": ISODate("2026-05-12"),
+  "createdAt": ISODate("2026-05-12")
+}
+```
+
+**Indexes**:
+- `fromUserId`
+- `toUserId`
+- `masjidId`
+- `transactionStatus`
+- `upiTransactionId` (unique within transaction date)
+- `transactionDate`
