@@ -1,28 +1,32 @@
+### 8. Donations Collection
+Tracks all donations to Masjids and Zakat to needy
+
+```json
 {
-  _id: ObjectId,
-  donorId: ObjectId (ref: users),
-  masjid: ObjectId (ref: masjids),
-  
-  // Donation Details
-  amount: Number,
-  currency: String,
-  donationType: Enum['zakat', 'sadaqah', 'general_donation', 'specific_cause'],
-  
-  // For Specific Causes
-  causeType: Enum['quran_classes', 'ask_imam', 'building', 'events', 'charity'],
-  specificCause: String,
-  needyPerson: ObjectId (ref: needy_persons), // if zakat donation
-  
-  // Payment Details
-  paymentMethod: Enum['upi', 'bank_transfer', 'card'],
-  transactionId: String,
-  
-  // Status
-  status: Enum['pending', 'completed', 'failed', 'refunded'],
-  
-  // Timestamps
-  donatedAt: Date,
-  completedAt: Date,
-  createdAt: Date,
-  updatedAt: Date
+  "_id": ObjectId,
+  "donorId": ObjectId, // Reference to Users
+  "amount": 1000,
+  "currency": "INR",
+  "donationType": "masjid_donation", // "masjid_donation", "zakat"
+  "masjidId": ObjectId, // Reference to Masjids (for donation collection UPI)
+  "needyPersonId": ObjectId, // Reference to Needy Persons (null if masjid donation)
+  "upiTransactionId": "UPI12345678901234567890",
+  "recipientUpiId": "alnoor@upi",
+  "paymentProofScreenshot": "url_to_screenshot",
+  "transactionStatus": "completed", // "pending_verification", "completed", "rejected"
+  "verifiedBy": ObjectId, // Reference to Users (Masjid Authority or Super Admin)
+  "verifiedDate": ISODate("2026-05-12"),
+  "receiptNumber": "RECEIPT-2026-00001",
+  "receiptUrl": "url_to_receipt_pdf",
+  "donationDate": ISODate("2026-05-12"),
+  "createdAt": ISODate("2026-05-12")
 }
+```
+
+**Indexes**:
+- `donorId`
+- `masjidId`
+- `needyPersonId`
+- `transactionStatus`
+- `upiTransactionId` (unique within transaction date)
+- `donationDate`
