@@ -2,7 +2,6 @@ const multer = require('multer');
 const path = require('path');
 const { MAX_FILE_SIZE, ALLOWED_FILE_TYPES } = require('../config/environment');
 
-// Storage configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
@@ -13,7 +12,6 @@ const storage = multer.diskStorage({
   }
 });
 
-// File filter
 const fileFilter = (req, file, cb) => {
   const ext = path.extname(file.originalname).substring(1).toLowerCase();
   
@@ -24,7 +22,6 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Multer middleware
 const upload = multer({
   storage,
   fileFilter,
