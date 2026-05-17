@@ -1,44 +1,35 @@
-# Islamic Community Hub - Masjid Management Platform
+# Islamic Community Hub - Frontend
 
-A comprehensive platform for managing Islamic community services including Nikah registration, job postings, matrimony profiles, Quran classes, and Zakat distribution.
+React frontend for the Islamic Community Hub platform.
 
-## 🎯 Features
+## Features
 
-### For Super Admin
-- Centralized dashboard with all data access
-- Approve/Reject masjid registrations
-- Verify needy person profiles
-- Manage registration and renewal fees
-- View all transactions and donations
+- 🏠 Browse Masjids with details
+- 💼 Job Listings & Applications
+- 💍 Matrimony Platform
+- 🎓 Educational Features
+- 💰 UPI Donations & Zakat
+- 📋 Nikah Nama Registration
+- 🏢 Masjid Registration
 
-### For Masjid Authorities
-- Area-specific dashboard
-- Create and manage nikah nama (marriage certificates)
-- Post job opportunities
-- Manage matrimony profiles
-- Create needy person/family profiles
-- Conduct live Quran classes (audio-only)
-- Organize "Ask Imam" interactive sessions
-- Collect donations via personal UPI ID
-- View area-specific statistics
+## Getting Started
 
-### For General Users
-- Browse and apply for jobs
-- View matrimony profiles
-- Donate to masjid
-- Access Zakat assistance for needy
-- Attend online Quran classes
-- Participate in Ask Imam sessions
-- View nikah registration details
+### Prerequisites
 
-## 🏗️ Tech Stack
+- Node.js 14+
+- npm or yarn
 
-**Backend**: Node.js + Express.js
-**Frontend**: React.js
-**Database**: MongoDB
-**Authentication**: JWT
-**Payment Gateway**: Razorpay (UPI)
-**Real-time Audio**: Agora SDK
-**Hosting**: Shoutcoder.com
+### Installation
 
-## 📁 Project Structure
+```bash
+# Clone repository
+git clone https://github.com/muhammed8803/islamic-community-hub.git
+cd islamic-community-hub/frontend
+
+# Install dependencies
+npm install
+
+# Create .env file
+cp .env.example .env
+
+# Update .env with your API URL
