@@ -1,11 +1,9 @@
-// User Roles
 const USER_ROLES = {
   SUPER_ADMIN: 'super_admin',
   MASJID_AUTHORITY: 'masjid_authority',
   GENERAL_USER: 'general_user'
 };
 
-// Masjid Status
 const MASJID_STATUS = {
   PENDING: 'pending',
   APPROVED: 'approved',
@@ -13,7 +11,6 @@ const MASJID_STATUS = {
   SUSPENDED: 'suspended'
 };
 
-// Job Status
 const JOB_STATUS = {
   ACTIVE: 'active',
   CLOSED: 'closed',
@@ -21,7 +18,6 @@ const JOB_STATUS = {
   CANCELLED: 'cancelled'
 };
 
-// Application Status
 const APPLICATION_STATUS = {
   PENDING: 'pending',
   SHORTLISTED: 'shortlisted',
@@ -29,13 +25,11 @@ const APPLICATION_STATUS = {
   SELECTED: 'selected'
 };
 
-// Donation Type
 const DONATION_TYPE = {
   MASJID_DONATION: 'masjid_donation',
   ZAKAT: 'zakat'
 };
 
-// Transaction Status
 const TRANSACTION_STATUS = {
   PENDING_VERIFICATION: 'pending_verification',
   COMPLETED: 'completed',
@@ -43,21 +37,18 @@ const TRANSACTION_STATUS = {
   FAILED: 'failed'
 };
 
-// Matrimony Status
 const MATRIMONY_STATUS = {
   PENDING_VERIFICATION: 'pending_verification',
   VERIFIED: 'verified',
   REJECTED: 'rejected'
 };
 
-// Interest Status
 const INTEREST_STATUS = {
   PENDING: 'pending',
   ACCEPTED: 'accepted',
   REJECTED: 'rejected'
 };
 
-// Needy Person Status
 const NEEDY_STATUS = {
   PENDING: 'pending',
   APPROVED: 'approved',
@@ -65,7 +56,6 @@ const NEEDY_STATUS = {
   COMPLETED: 'completed'
 };
 
-// Needy Person Reason
 const NEEDY_REASON = {
   MEDICAL: 'medical',
   EDUCATION: 'education',
@@ -74,14 +64,12 @@ const NEEDY_REASON = {
   OTHER: 'other'
 };
 
-// Class Level
 const CLASS_LEVEL = {
   BEGINNER: 'beginner',
   INTERMEDIATE: 'intermediate',
   ADVANCED: 'advanced'
 };
 
-// Enrollment Status
 const ENROLLMENT_STATUS = {
   PENDING: 'pending',
   APPROVED: 'approved',
@@ -89,7 +77,6 @@ const ENROLLMENT_STATUS = {
   COMPLETED: 'completed'
 };
 
-// Session Status
 const SESSION_STATUS = {
   SCHEDULED: 'scheduled',
   LIVE: 'live',
