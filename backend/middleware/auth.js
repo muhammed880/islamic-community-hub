@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../config/environment');
 const { USER_ROLES } = require('../config/constants');
 
-// Verify JWT Token
 const verifyToken = (req, res, next) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
@@ -26,7 +25,6 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-// Check if user is Super Admin
 const isSuperAdmin = (req, res, next) => {
   if (req.userRole !== USER_ROLES.SUPER_ADMIN) {
     return res.status(403).json({
@@ -37,7 +35,6 @@ const isSuperAdmin = (req, res, next) => {
   next();
 };
 
-// Check if user is Masjid Authority
 const isMasjidAuthority = (req, res, next) => {
   if (req.userRole !== USER_ROLES.MASJID_AUTHORITY) {
     return res.status(403).json({
@@ -48,7 +45,6 @@ const isMasjidAuthority = (req, res, next) => {
   next();
 };
 
-// Check if user is General User
 const isGeneralUser = (req, res, next) => {
   if (req.userRole !== USER_ROLES.GENERAL_USER) {
     return res.status(403).json({
