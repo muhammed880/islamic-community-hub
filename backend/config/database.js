@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { MONGODB_URI } = require('./environment');
+const logger = require('../utils/logger');
 
 const connectDB = async () => {
   try {
@@ -8,21 +9,19 @@ const connectDB = async () => {
       useUnifiedTopology: true,
     });
 
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+    logger.info(`✅ MongoDB Connected: ${conn.connection.host}`);
     
-    // Enable connection pooling
     mongoose.connection.on('disconnected', () => {
-      console.log('⚠️  MongoDB disconnected');
+      logger.warn('⚠️  MongoDB disconnected');
     });
 
     mongoose.connection.on('reconnected', () => {
-      console.log('✅ MongoDB reconnected');
+      logger.info('✅ MongoDB reconnected');
     });
 
     return conn;
   } catch (error) {
-    console.error('❌ MongoDB Connection Error:', error.message);
-    // Retry connection after 5 seconds
+    logger.error('❌ MongoDB Connection Error:', error.message);
     setTimeout(connectDB, 5000);
   }
 };
