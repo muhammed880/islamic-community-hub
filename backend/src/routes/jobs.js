@@ -1,6 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const { verifyToken, isMasjidAuthority } = require('../middleware/auth');
+const upload = require('../middleware/upload');
+const {
+  listJobs,
+  getJobDetails,
+  createJob,
+  applyForJob,
+  getJobApplications
+} = require('../controllers/jobController');
 
 /**
  * JOBS MANAGEMENT ROUTES
@@ -14,45 +22,29 @@ const { verifyToken, isMasjidAuthority } = require('../middleware/auth');
  * List all job postings
  * Access: Public
  * Query: { page, limit, city, state, jobType, search }
+ * Response: { jobs[], pagination }
  */
-router.get('/', (req, res) => {
-  res.json({
-    success: true,
-    message: 'List all jobs endpoint',
-    endpoint: 'GET /api/jobs',
-    implementation: 'Pending - Create jobController.js'
-  });
-});
+router.get('/', listJobs);
 
 /**
  * GET /api/jobs/:jobId
  * Get job details
  * Access: Public
+ * Response: Job object with masjid and creator info
  */
-router.get('/:jobId', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Get job details endpoint',
-    endpoint: `GET /api/jobs/${req.params.jobId}`,
-    implementation: 'Pending - Create jobController.js'
-  });
-});
+router.get('/:jobId', getJobDetails);
 
 // ==================== PROTECTED ROUTES ====================
 
 /**
  * POST /api/jobs/:jobId/apply
  * Apply for job
- * Access: Protected
+ * Access: Protected (Authenticated Users)
+ * Files: resume (PDF/DOC max 5MB)
+ * Body: { coverLetter }
+ * Response: { applicationId, status }
  */
-router.post('/:jobId/apply', verifyToken, (req, res) => {
-  res.json({
-    success: true,
-    message: 'Apply for job endpoint',
-    endpoint: `POST /api/jobs/${req.params.jobId}/apply`,
-    implementation: 'Pending - Create jobController.js'
-  });
-});
+router.post('/:jobId/apply', verifyToken, upload.single('resume'), applyForJob);
 
 // ==================== MASJID AUTHORITY ROUTES ====================
 
@@ -60,28 +52,17 @@ router.post('/:jobId/apply', verifyToken, (req, res) => {
  * POST /api/jobs
  * Create new job posting
  * Access: Protected (Masjid Authority)
+ * Body: { jobTitle, jobDescription, jobType, salaryRange, location, qualifications, experience, skills, closingDate }
+ * Response: Created job object
  */
-router.post('/', verifyToken, isMasjidAuthority, (req, res) => {
-  res.json({
-    success: true,
-    message: 'Create job posting endpoint',
-    endpoint: 'POST /api/jobs',
-    implementation: 'Pending - Create jobController.js'
-  });
-});
+router.post('/', verifyToken, isMasjidAuthority, createJob);
 
 /**
  * GET /api/jobs/:jobId/applications
  * Get job applications
  * Access: Protected (Masjid Authority)
+ * Response: { applications[] }
  */
-router.get('/:jobId/applications', verifyToken, isMasjidAuthority, (req, res) => {
-  res.json({
-    success: true,
-    message: 'Get job applications endpoint',
-    endpoint: `GET /api/jobs/${req.params.jobId}/applications`,
-    implementation: 'Pending - Create jobController.js'
-  });
-});
+router.get('/:jobId/applications', verifyToken, isMasjidAuthority, getJobApplications);
 
 module.exports = router;
