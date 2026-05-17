@@ -5,7 +5,6 @@ const errorHandler = (err, req, res, next) => {
   const status = err.status || 500;
   const message = err.message || 'Internal Server Error';
 
-  // Log error
   logger.error(`[${new Date().toISOString()}] ${message}`, {
     status,
     path: req.originalUrl,
@@ -13,7 +12,6 @@ const errorHandler = (err, req, res, next) => {
     stack: err.stack
   });
 
-  // Send response
   res.status(status).json({
     success: false,
     message: NODE_ENV === 'development' ? message : 'Something went wrong',
