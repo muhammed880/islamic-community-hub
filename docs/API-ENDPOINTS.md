@@ -259,7 +259,8 @@ Authorization: Bearer {jwt_token}
   "data": {
     "masjidId": "507f1f77bcf86cd799439012",
     "status": "pending",
-    "registrationFeeAmount": 5000
+    "registrationFeeAmount": 5000,
+    "registrationFeeUpiId": "superadmin@upi"
   }
 }
 ```
@@ -282,6 +283,7 @@ Authorization: Bearer {jwt_token}
     "status": "approved",
     "address": {...},
     "upiId": "alnoor@upi",
+    "upiQrCode": "url_to_qr_code",
     "totalMembers": 200,
     "totalDonations": 50000,
     "averageRating": 4.5,
@@ -316,6 +318,7 @@ Authorization: Bearer {jwt_token}
       "masjidName": "Al-Noor Masjid",
       "city": "Bangalore",
       "address": {...},
+      "upiId": "alnoor@upi",
       "totalDonations": 50000,
       "averageRating": 4.5
     }
@@ -817,21 +820,45 @@ Authorization: Bearer {jwt_token}
 
 ---
 
-## 7. DONATIONS ENDPOINTS
+## 7. DONATIONS ENDPOINTS (UPI ONLY)
 
-### 7.1 Create Donation
-**Endpoint:** `POST /donations`
+### 7.1 Get Recipient UPI ID
+**Endpoint:** `GET /donations/upi/{masjidId}`
+**Access:** Public
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "data": {
+    "masjidId": "507f1f77bcf86cd799439012",
+    "masjidName": "Al-Noor Masjid",
+    "upiId": "alnoor@upi",
+    "upiQrCode": "url_to_qr_code_image",
+    "displayName": "Al-Noor Masjid Donation",
+    "city": "Bangalore"
+  }
+}
+```
+
+---
+
+### 7.2 Record Donation (Manual UPI)
+**Endpoint:** `POST /donations/record`
 **Access:** Protected
+**Content-Type:** multipart/form-data
 
 **Request:**
 ```json
 {
   "amount": 1000,
   "currency": "INR",
-  "donationType": "zakat",
+  "donationType": "masjid_donation",
   "masjidId": "507f1f77bcf86cd799439012",
-  "needyPersonId": "507f1f77bcf86cd799439017",
-  "paymentMethod": "upi"
+  "upiTransactionId": "UPI12345678901234567890",
+  "recipientUpiId": "alnoor@upi",
+  "donationDate": "2026-05-12T10:30:00Z",
+  "screenshotUrl": "[file - payment screenshot]"
 }
 ```
 
@@ -839,27 +866,27 @@ Authorization: Bearer {jwt_token}
 ```json
 {
   "success": true,
-  "message": "Donation initiated. Redirecting to payment...",
+  "message": "Donation recorded successfully",
   "data": {
     "donationId": "507f1f77bcf86cd799439018",
-    "razorpayOrderId": "order_IluGWxBm9U8zJ7",
-    "razorpayCheckoutUrl": "https://checkout.razorpay.com/v1/checkout.js"
+    "status": "pending_verification",
+    "receiptNumber": "RECEIPT-2026-00001",
+    "amount": 1000
   }
 }
 ```
 
 ---
 
-### 7.2 Verify Donation Payment
-**Endpoint:** `POST /donations/{donationId}/verify`
-**Access:** Protected
+### 7.3 Verify Donation (Masjid Authority or Super Admin)
+**Endpoint:** `PUT /donations/{donationId}/verify`
+**Access:** Protected (Masjid Authority / Super Admin)
 
 **Request:**
 ```json
 {
-  "razorpayPaymentId": "pay_IluGWxBm9U8zJ7",
-  "razorpayOrderId": "order_IluGWxBm9U8zJ7",
-  "razorpaySignature": "9ef4dffbfd84f1318f6739a3ce19f9d85851857ae648f114332d8401e0949a3d"
+  "verificationStatus": "verified",
+  "verificationNotes": "UPI transaction confirmed"
 }
 ```
 
@@ -867,23 +894,24 @@ Authorization: Bearer {jwt_token}
 ```json
 {
   "success": true,
-  "message": "Donation confirmed successfully",
+  "message": "Donation verified",
   "data": {
     "donationId": "507f1f77bcf86cd799439018",
     "status": "completed",
+    "receiptNumber": "RECEIPT-2026-00001",
     "receiptUrl": "url_to_receipt_pdf",
-    "receiptNumber": "RECEIPT-2026-00001"
+    "verifiedDate": "2026-05-12T11:00:00Z"
   }
 }
 ```
 
 ---
 
-### 7.3 Get Donation History
+### 7.4 Get Donation History
 **Endpoint:** `GET /donations`
 **Access:** Protected
 **Query Parameters:**
-- `status` (pending, completed, failed)
+- `status` (pending_verification, completed, rejected)
 - `donationType` (masjid_donation, zakat)
 - `page`, `limit`
 
@@ -895,13 +923,40 @@ Authorization: Bearer {jwt_token}
     {
       "donationId": "507f1f77bcf86cd799439018",
       "amount": 1000,
-      "donationType": "zakat",
+      "donationType": "masjid_donation",
       "status": "completed",
+      "masjidName": "Al-Noor Masjid",
       "donationDate": "2026-05-12T10:30:00Z",
       "receiptNumber": "RECEIPT-2026-00001"
     }
   ],
   "pagination": {...}
+}
+```
+
+---
+
+### 7.5 Request Refund
+**Endpoint:** `POST /donations/{donationId}/refund-request`
+**Access:** Protected (Donor)
+
+**Request:**
+```json
+{
+  "reason": "Duplicate payment",
+  "description": "I sent payment twice by mistake"
+}
+```
+
+**Response (201 Created):**
+```json
+{
+  "success": true,
+  "message": "Refund request submitted",
+  "data": {
+    "refundRequestId": "507f1f77bcf86cd799439025",
+    "status": "pending"
+  }
 }
 ```
 
@@ -1269,32 +1324,10 @@ Authorization: Bearer {jwt_token}
     "totalNeedyPersons": 120,
     "totalJobs": 85,
     "totalMatrimonyProfiles": 1200,
-    "totalNikahNamas": 300
+    "totalNikahNamas": 300,
+    "registrationFeesCollected": 210000,
+    "renewalFeesCollected": 84000
   }
-}
-```
-
----
-
-### 11.2 Verify Registration Fees
-**Endpoint:** `POST /admin/verify-payment/{masjidId}`
-**Access:** Protected (Super Admin)
-
-**Request:**
-```json
-{
-  "razorpayPaymentId": "pay_xxx",
-  "razorpayOrderId": "order_xxx",
-  "razorpaySignature": "signature_xxx"
-}
-```
-
-**Response (200 OK):**
-```json
-{
-  "success": true,
-  "message": "Registration fee verified",
-  "data": {...}
 }
 ```
 
@@ -1384,7 +1417,7 @@ Authorization: Bearer {jwt_token}
 ## Pagination
 
 All list endpoints support pagination:
-```
+```json
 {
   "data": [...],
   "pagination": {
@@ -1398,6 +1431,7 @@ All list endpoints support pagination:
 
 ---
 
-**API Version**: 1.0
+**API Version**: 1.0 (UPI Only - No Payment Gateway)
 **Last Updated**: 2026-05-12
+**Transaction Method**: Direct UPI
 **Maintained By**: Islamic Community Hub Team
