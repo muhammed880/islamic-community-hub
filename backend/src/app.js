@@ -3,7 +3,7 @@ const cors = require('cors');
 const fileUpload = require('express-fileupload');
 require('dotenv').config();
 
-// Routes
+// Routes (we'll create these next)
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const masjidRoutes = require('./routes/masjids');
@@ -17,21 +17,24 @@ const { errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
 
-// Middleware
+// CORS Configuration
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true
 }));
 
+// Body Parser
 app.use(express.json());
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+// File Upload
 app.use(fileUpload({
   useTempFiles: true,
   tempFileDir: '/tmp/',
   limits: { fileSize: 50 * 1024 * 1024 },
 }));
 
-// Health check endpoint
+// Health Check
 app.get('/api/health', (req, res) => {
   res.json({
     success: true,
@@ -58,7 +61,7 @@ app.use((req, res) => {
   });
 });
 
-// Error Handler Middleware
+// Error Handler
 app.use(errorHandler);
 
 module.exports = app;
