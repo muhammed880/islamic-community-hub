@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nikah Certificate</title>
+  <style>
+    body { font-family: 'DejaVu Sans', Arial, sans-serif; margin: 40px; color: #222 }
+    .header { text-align: center; margin-bottom: 20px }
+    .masjid-name { font-size: 20px; font-weight: 700 }
+    .masjid-address { font-size: 12px; color: #444 }
+    .title { text-align:center; font-size:18px; margin: 24px 0; font-weight:700 }
+    .content { font-size:14px; line-height:1.6; margin-bottom: 24px }
+    .section { margin-bottom: 12px }
+    .signatures { display:flex; justify-content:space-between; margin-top: 30px }
+    .sig-block { width: 30%; text-align:center }
+    .sig-image { height:60px; border:1px dashed #999; margin-bottom:8px }
+    .sig-placeholder { height:60px; border:1px solid #000; }
+    .footer { margin-top: 36px; border-top:1px solid #ddd; padding-top:12px; text-align:center }
+    .verse-ar { font-size:16px; direction:rtl; font-family: 'Noto Naskh Arabic', 'Scheherazade', 'Arial'; margin-bottom:8px }
+    .verse-en { font-size:12px; color:#333 }
+    .meta { font-size:12px; color:#555 }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="masjid-name">{{MASJID_NAME}}</div>
+    <div class="masjid-address">{{MASJID_ADDRESS}}</div>
+  </div>
+
+  <div class="title">NIKAH CERTIFICATE</div>
+
+  <div class="content">
+    <div class="section">This Nikah is solemnized by <strong>{{QAZI_NAME}}</strong> on <strong>{{DATE_TIME}}</strong> at <strong>{{VENUE}}</strong> under the supervision of <strong>{{MASJID_NAME}}</strong> in the presence of family & friends between <strong>{{BRIDE_NAME}}</strong> (daughter of <strong>{{BRIDE_FATHER}}</strong>) and <strong>{{GROOM_NAME}}</strong> (son of <strong>{{GROOM_FATHER}}</strong>) by witnesses <strong>{{WITNESS1_NAME}}</strong> and <strong>{{WITNESS2_NAME}}</strong>.</div>
+
+    <div class="section"><strong>Mahar (if any):</strong> {{MAHAR}}</div>
+    <div class="section"><strong>Dowry (if any):</strong> {{DOWRY}}</div>
+    <div class="section"><strong>Terms & Conditions:</strong> {{TERMS}}</div>
+  </div>
+
+  <div class="signatures">
+    <div class="sig-block">
+      <div class="sig-image">{{BRIDE_SIG}}</div>
+      <div>Bride</div>
+      <div class="meta">(Space for physical signature)</div>
+    </div>
+    <div class="sig-block">
+      <div class="sig-image">{{GROOM_SIG}}</div>
+      <div>Groom</div>
+      <div class="meta">(Space for physical signature)</div>
+    </div>
+    <div class="sig-block">
+      <div class="sig-image">{{QAZI_SIG}}</div>
+      <div>Qazi / Imam</div>
+      <div class="meta">(Space for physical signature)</div>
+    </div>
+  </div>
+
+  <div class="signatures" style="margin-top:18px">
+    <div class="sig-block">
+      <div class="sig-image">{{W1_SIG}}</div>
+      <div>Witness 1</div>
+    </div>
+    <div class="sig-block">
+      <div class="sig-image">{{W2_SIG}}</div>
+      <div>Witness 2</div>
+    </div>
+    <div class="sig-block">
+      <div class="sig-image">{{MASJID_SIG}}</div>
+      <div>Masjid Authorized</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="verse-ar">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا لِتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِقَوْمٍ يَتَفَكَّرُونَ</div>
+    <div class="verse-en">Surah Ar-Rum (30:21) "And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy. Indeed in that are signs for a people who give thought."</div>
+    <div class="meta">Nikah ID: {{NIKAH_CODE}} | Generated on {{GENERATED_AT}}</div>
+  </div>
+</body>
+</html>
