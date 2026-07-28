@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Public read for listings (jobs / matrimony / zakat / masjids) but write restricted
+    match /masjids/{masjidId} {
+      allow read: if true;
+      allow create: if request.auth != null || request.resource.data.creatorAnonymous == true;
+      allow update, delete: if isMasjidAdminOrSuperAdmin();
+    }
+
+    match /nikah_regs/{docId} {
+      allow create: if isMasjidAdminOrCreator();
+      allow read: if isInvolvedParty() || isMasjidAdminOrSuperAdmin();
+      allow update, delete: if isMasjidAdminOrSuperAdmin();
+    }
+
+    match /{collection}/{doc} {
+      allow read: if true;
+      allow write: if false; // default deny - refine per collection
+    }
+
+    function isMasjidAdminOrSuperAdmin() {
+      return request.auth != null && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['masjid_admin','super_admin']
+      );
+    }
+    function isMasjidAdminOrCreator() {
+      return request.auth != null && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['masjid_admin','super_admin']
+        || request.auth.uid == request.resource.data.createdBy
+      );
+    }
+    function isInvolvedParty() {
+      // Basic placeholder: restrict reading sensitive nikah docs to involved parties
+      return request.auth != null && (
+        request.auth.uid == resource.data.createdBy
+        || (resource.data.bride != null && resource.data.bride.mobile == getUserPhone())
+        || (resource.data.groom != null && resource.data.groom.mobile == getUserPhone())
+        || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'super_admin'
+      );
+    }
+    function getUserPhone() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.phone;
+    }
+  }
+}

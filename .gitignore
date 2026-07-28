@@ -1,0 +1,15 @@
+# Node & Firebase
+node_modules/
+.env
+
+# Android
+android-app/app/google-services.json
+android-app/.gradle
+android-app/.idea
+
+# Mac
+.DS_Store
+
+# IntelliJ
+*.iml
+.idea/
