@@ -1,0 +1,17 @@
+# Android app scaffold (updated)
+
+This Android scaffold contains a minimal Jetpack Compose app with a Home screen (tiles) and a simple SignaturePad composable.
+
+Next steps to run locally:
+1. Open `android-app` in Android Studio.
+2. Add your `google-services.json` at `android-app/app/google-services.json`.
+3. Sync Gradle, build and run on a device or emulator.
+
+Planned work I will add next after you confirm:
+- Firebase Authentication (Phone + OTP) integration
+- Firestore data access layer and repository classes
+- Masjid registration flow (UPI intent + UTR) and Masjid dashboard
+- Nikah registration form, signature capture upload to Firebase Storage
+- Donations / Jobs / Matrimony / Zakat listings and CRUD flows
+
+If you want a debug APK built and uploaded to Releases, say "Build APK" once google-services.json is present in the repo.
